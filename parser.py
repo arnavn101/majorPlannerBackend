@@ -5,11 +5,11 @@ tryCourses = {'COMPSCI 250': {'prereqs': ['COMPSCI 187', 'MATH 132'], 'professor
 
 def tokenize(str):
     courseNum = str.split(" ")[1]
-    return courseNum
+    return courseNum    
 
 
 def main(courses):
-    result = {"100lvl" : {}, "200lvl" : {}, "300lvl": {}, "400lvl": {}}
+    result = {"100C" : {}, "200C" : {}, "300C": {}, "400C": {}}
     i = 0
     for courseObj in courses:
         mainCourse = list(courses.keys())[i]
@@ -26,13 +26,13 @@ def findlvl(courseNum):
     lvlHere = courseNum[0]
     lvl = ""
     if lvlHere == "1":
-        lvl = "100lvl"
+        lvl = "100C"
     elif lvlHere == "2":
-        lvl = "200lvl"
+        lvl = "200C"
     elif lvlHere == "3":
-        lvl = "300lvl"
+        lvl = "300C"
     elif lvlHere == "4":
-        lvl = "400lvl"
+        lvl = "400C"
     else:
         return "Not Valid"
     return lvl
