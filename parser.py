@@ -14,7 +14,7 @@ all_topics = topics_to_courses(cics_courses, fetch_topics())
 
 def tokenize(str):
     courseNum = str.split(" ")[1]
-    return courseNum
+    return keep_only_nums(courseNum)
 
 def getAttribute(courseNumber, courses, attribute):
     result = {}
@@ -76,7 +76,8 @@ def getCourseNums(courses):
     for _ in courses:
         mainCourse = list(courses.keys())[i]
         curr = tokenize(mainCourse)
-        if curr != "311" and curr != "305" and curr[0] != "1" and curr[0] != "2" and curr[0] != "H" and curr != "186":
+        if curr != "311" and curr != "305" and curr[0] != "1" and curr[0] != "2" and "H" not in mainCourse and curr != "186"\
+                and not curr.startswith("49") and not curr.startswith("39") and curr != "490U" and curr != "460":
             lvl = findlvl(curr)
             result[lvl][curr] = []
             preReqArr = courses[mainCourse]['prereqs']

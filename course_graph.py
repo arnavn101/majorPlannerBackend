@@ -104,13 +104,13 @@ class cGraph:
     total = []
     for num in path:
       if num >= "300" and num not in total and all([num not in l for l in coursePlan]):
-        if len(layer) < 3:
+        if len(layer) < 3 and num not in layer:
           layer.append(num)
           total.append(num)
         else:
           coursePlan.append(layer)
           layer = []
-    
+
     if len(layer) > 0:
       coursePlan.append(layer)
 
@@ -164,12 +164,17 @@ def flatten(l):
 
 
 taken = ["121", "187"]
+courses["400E"]["461"].pop()
+for d in courses:
+  for p in courses[d]:
+    courses[d][p] = list(set(courses[d][p]))
 
 courseGraph = cGraph(courses)
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
 
-good_topics = ["Artificial Intelligence", "Data Science"]
+print(all_topics.keys())
+good_topics = ["Graphics, Vision, and Visualization", "Hardware Integration"]
 good_courses = flatten([all_topics[t] for t in good_topics])
-parsed_good = list(map(tokenize, good_courses))
-# print(courseGraph.generatePlan(parsed_good, taken))
+parsed_good = list(set(list(filter(lambda d: d[1] != "9" and d[0] != "1", (list(map(tokenize, good_courses)))))))[:3]
+print(courseGraph.generatePlan(parsed_good, taken))
 pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(parsed_good, taken), taken))
