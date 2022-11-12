@@ -100,11 +100,15 @@ class cGraph:
         else:
           coursePlan.append(layer)
           layer = []
+
+    total = []
     for num in path:
-      if num >= "400" and num not in layer:
+      if num >= "400" and num not in total:
         if len(layer) < 3:
           layer.append(num)
+          total.extend(layer)
         else:
+          total.extend(layer)
           coursePlan.append(layer)
           layer = []
     
@@ -150,7 +154,7 @@ class cGraph:
       if "248" in path[key]:
         path[key].remove("248")
     
-    return {key: val for key, val in path.items() if key not in taken and key != "186"}
+    return {key: val for key, val in path.items() if key not in taken and key != "186" and key != "248"}
 
   def generatePlan(self, interests: list, taken: list):
     return self.addFillers(self.addInterests(interests), taken)
