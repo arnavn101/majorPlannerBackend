@@ -46,9 +46,9 @@ def get_prof_rmp():
 def getProfRating(instructor):
     allProfs = get_prof_rmp()
     for prof in allProfs.keys():
-        if prof == instructor:
+        if prof == instructor and allProfs[prof]["rating"] != "N/A":
             return allProfs[prof]["rating"]
-    return "Invalid"
+    return 0
 
 # print(getProfRating("Ghazaleh Parvini"))
 

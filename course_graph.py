@@ -1,18 +1,25 @@
 from collections import namedtuple
 import pprint  
 from apis_extract import keep_only_nums
-from parser import cics_courses, getCourseNums
+from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getIntructors
 
 courses = getCourseNums(cics_courses)
 # pprint.pprint(courses)
 
 class cNode:
 
-  def __init__(self, number, name="name", difficulty="Medium", credits=4):
+  def __init__(self, number, prof, name, rating=0, credits=4):
     self.name = name #Todo
     self.number = number
-    self.difficulty = difficulty
+    self.prof = prof
+    self.rating = rating
     self.credits = credits
+  
+  def __hash__(self):
+    return self.number
+  
+  def __eq__(self, num):
+    return self.number == num
 
 class cEdge:
 
@@ -37,7 +44,16 @@ class cGraph:
         return True
     return False
 
-  # def getNode(self, course, prereqs):
+  def getNode(self, course: str):
+    name = getTitle(course)
+    credits = getCredits(course)
+    profs = getIntructors(course)
+    maxRating, bestProf = 0, ""
+    for p in profs:
+      if (best := float(getProfRating(p[0]))) >= maxRating:
+        bestProf = p[0]
+        maxRating = best
+    return cNode(course, bestProf, name, maxRating, credits)
   
   def getPrereqs(self, course: str):
     if self.isCourse(course):
@@ -68,65 +84,39 @@ class cGraph:
 
   def addFillers(self, interestPath: dict, taken: list):
 
-    def getNext(lvl):
-      for c in courses[lvl]:
-        if self.prereqsSatisfied(c, path) and c not in path:
-          return c
-      return None
+    def getBest(lvl):
+      maxRating, bestCourse = float("-inf"), ""
+      for c in self.graph[lvl]:
+        node = self.getNode(c)
+        if self.prereqsSatisfied(c, path) and c not in path and node.rating >= maxRating:
+          maxRating = node.rating
+          bestCourse = c
+      return bestCourse
       
     path = interestPath
     numElectives = lambda d, lvl: len([key for key in d if keep_only_nums(key) >= keep_only_nums(lvl) and keep_only_nums(key) not in ["311", "305"]])
     
-    for c in courses["200C"]:
-      path[c] = courses["200C"][c]
+    for c in self.graph["200C"]:
+      path[c] = self.graph["200C"][c]
     
-    for c in courses["300C"]:
-      path[c] = courses["300C"][c]
+    for c in self.graph["300C"]:
+      path[c] = self.graph["300C"][c]
     
-    while numElectives(path, "300E") <= 4:
-      next = getNext("300E")
-      path[next] = courses["300E"][next]
+    while numElectives(path, "300E") < 4:
+      next = getBest("300E")
+      path[next] = self.graph["300E"][next]
 
-    while numElectives(path, "400E") <= 3:
-      next = getNext("400E")
-      path[next] = courses["400E"][next]
+    while numElectives(path, "400E") < 3:
+      next = getBest("400E")
+      path[next] = self.graph["400E"][next]
 
+    for key in path:
+      path[key] = list(map(lambda v: self.getNode(v), path[key]))
+    
     return {key: val for key, val in path.items() if key not in taken}
 
   def generatePlan(self, interests: list, taken: list):
     return self.addFillers(self.addInterests(interests), taken)
-    
-
-# courses = {
-#   "100C": {
-#     "121": [],
-#     "187": ["121"]
-#   },
-#   "200C": {
-#     "220": ["121", "187"],
-#     "230": ["121", "187"],
-#     "240": ["187"],
-#     "250": ["187"]
-#   },
-#   "300C": {
-#     "305": ["220", "230", "240", "250"],
-#     "311": ["187", "250"]
-#   },
-#   "300E": {
-#     "345": ["187"],
-#     "377": ["230"],
-#     "383": ["220", "240"],
-#     "320": ["220"],
-#     "326": ["220", "230"],
-#   },
-#   "400E": {
-#     "420": ["320", "220"],
-#     "446": ["220", "240"],
-#     "453": ["230", "377"],
-#     "445": ["345"],
-#     "403": ["230", "187"]
-#   }
-# }
 
 taken = ["121", "187", "220", "230"]
 
