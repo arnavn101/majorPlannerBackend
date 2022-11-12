@@ -103,17 +103,17 @@ class cGraph:
 
     total = []
     for num in path:
-      if num >= "400" and num not in total:
+      if num >= "400" and num not in total and all([num not in l for l in coursePlan]):
         if len(layer) < 3:
           layer.append(num)
-          total.extend(layer)
+          total.append(num)
         else:
-          total.extend(layer)
           coursePlan.append(layer)
           layer = []
     
     if len(layer) > 0:
       coursePlan.append(layer)
+
     return coursePlan
 
   def addFillers(self, interestPath: dict, taken: list):
