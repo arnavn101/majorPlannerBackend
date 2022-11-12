@@ -17,7 +17,7 @@ def main(courses):
         "311": ["187", "250"],
         "305": ["220", "230", "240", "250"]
     },
-        "300E": {}, "400C": {}}
+        "300E": {}, "400E": {}}
     i = 0
     for courseObj in courses:
         mainCourse = list(courses.keys())[i]
@@ -42,7 +42,7 @@ def findlvl(courseNum):
     elif lvlHere == "3":
         lvl = "300E"
     elif lvlHere == "4":
-        lvl = "400C"
+        lvl = "400E"
     else:
         return "Not Valid"
     return lvl
