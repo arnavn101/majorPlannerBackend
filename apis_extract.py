@@ -60,13 +60,13 @@ def fetch_courses():
     return courses_info
 
 
-def write_to_file(courses_info):
-    with open('spireInfo.pickle', 'wb') as handle:
+def write_to_file(file_name, courses_info):
+    with open(file_name, 'wb') as handle:
         pickle.dump(courses_info, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def read_from_file():
-    with open('spireInfo.pickle', 'rb') as handle:
+def read_from_file(file_name):
+    with open(file_name, 'rb') as handle:
         d = pickle.load(handle)
     return d
 
@@ -86,6 +86,6 @@ def topics_to_courses(courses, topics):
     return topics_mappings
 
 
-# write_to_file(fetch_courses())
-# all_info = read_from_file()
+# write_to_file("spireInfo.pickle", fetch_courses())
+# all_info = read_from_file("spireInfo.pickle")
 # all_topics = topics_to_courses(all_info, fetch_topics())
