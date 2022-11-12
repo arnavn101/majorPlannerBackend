@@ -85,4 +85,4 @@ def findlvl(courseNum):
         return "Not Valid"
     return lvl
 
-print(getCourseNums(cics_courses))
+# print(getCourseNums(cics_courses))
