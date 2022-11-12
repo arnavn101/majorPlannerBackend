@@ -9,17 +9,33 @@ def tokenize(str):
 
 
 def main(courses):
-    result = {}
+    result = {"100lvl" : {}, "200lvl" : {}, "300lvl": {}, "400lvl": {}}
     i = 0
     for courseObj in courses:
         mainCourse = list(courses.keys())[i]
         curr = tokenize(mainCourse)
-        result[curr] = []
+        lvl = findlvl(curr)
+        result[lvl][curr] = []
         preReqArr = courses[mainCourse]['prereqs']
         for elem in preReqArr:
-            result[curr].append(tokenize(elem))
+            result[lvl][curr].append(tokenize(elem))
         i+=1
     return result
+
+def findlvl(courseNum):
+    lvlHere = courseNum[0]
+    lvl = ""
+    if lvlHere == "1":
+        lvl = "100lvl"
+    elif lvlHere == "2":
+        lvl = "200lvl"
+    elif lvlHere == "3":
+        lvl = "300lvl"
+    elif lvlHere == "4":
+        lvl = "400lvl"
+    else:
+        return "Not Valid"
+    return lvl
 
 
 print(main(tryCourses))
