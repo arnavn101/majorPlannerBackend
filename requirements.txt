@@ -2,3 +2,4 @@ fastapi
 requests
 tqdm
 bs4
+uvicorn
