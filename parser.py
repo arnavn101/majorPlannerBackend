@@ -16,15 +16,27 @@ def tokenize(str):
     courseNum = str.split(" ")[1]
     return courseNum
 
+def getAttribute(courseNumber, courses, attribute):
+    result = {}
+    for courseNeeded in courses.keys():
+        curr = tokenize(courseNeeded)
+        if curr == courseNumber:
+            return courses[courseNeeded][attribute]
+    return "Invalid"
 
+def getTitle(courseNumber):
+    return getAttribute(courseNumber, cics_courses, 'title')
+
+def getCredits(courseNumber):
+    return getAttribute(courseNumber, cics_courses, 'credits')
 
 def get_prof_rmp():
     proffesors = {}
     for proff in profs.keys():
-        proffesors[proff] = {"rating": profs[proff]["overall_rating"], "numRatings": profs[proff]["tNumRatings"]}
+        proffesors[proff.split(" ")[0] + " " + proff.split(" ")[-1]] = {"rating": profs[proff]["overall_rating"], "numRatings": profs[proff]["tNumRatings"]}
     return proffesors
 
-print(get_prof_rmp())
+# print(getTitle("220") + " credits:" + str(getCredits("220")))
 
 
 
