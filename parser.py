@@ -1,10 +1,15 @@
 from apis_extract import read_from_file, topics_to_courses, fetch_topics, keep_only_nums
+from rate_my_prof import RateMyProfScraper
 
 # tryCourses = {'COMPSCI 250': {'prereqs': ['COMPSCI 187', 'MATH 132'], 'professors': ['Ghazaleh Parvini'], 'description': "Basic concepts of discrete mathematics useful to computer science:  set theory, strings and formal languages, propositional and predicate calculus, relations and functions, basic number theory.  Induction and recursion:  interplay of inductive definition, inductive proof, and recursive algorithms.  Graphs, trees, and search.   Finite-state machines, regular languages, nondeterministic finite automata, Kleene's Theorem.", 'credits': 4.0},
 #               'COMPSCI 220': {'prereqs': ['COMPSCI 187'], 'professors': ['Jaime Davila', 'Marius Minea'], 'description': 'Development of individual skills necessary for designing, implementing, testing and modifying larger programs, including: design strategies and patterns, using functional and object-oriented approaches, testing and program verification, code refactoring, interfacing with libraries.', 'credits': 4.0, 'title': 'Programming Methodology'}
 #               }
 
-cics_courses = read_from_file()
+umass_uni = RateMyProfScraper(1513)
+umass_uni.read_dict()
+profs = umass_uni.dict_professors
+
+cics_courses = read_from_file("spireInfo.pickle")
 all_topics = topics_to_courses(cics_courses, fetch_topics())
 
 def tokenize(str):
@@ -12,7 +17,18 @@ def tokenize(str):
     return courseNum
 
 
-def main(courses):
+
+def get_prof_rmp():
+    proffesors = {}
+    for proff in profs.keys():
+        proffesors[proff] = {"rating": profs[proff]["overall_rating"], "numRatings": profs[proff]["tNumRatings"]}
+    return proffesors
+
+print(get_prof_rmp())
+
+
+
+def getCourseNums(courses):
     result = {"100C": {}, "200C": {}, "300C": {
         "311": ["187", "250"],
         "305": ["220", "230", "240", "250"]
