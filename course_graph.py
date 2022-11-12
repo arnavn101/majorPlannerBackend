@@ -85,18 +85,19 @@ class cGraph:
   def splitCourses(self, path: dict, taken: list):
     coursePlan = []
     keys = sorted(list(path.keys()))
-    print(keys)
     for course in taken:
       for num in keys:
           if course in path[num]:
             path[num].remove(course)
-    
-    i = 2
+
+    maxCourses = 2
     layer = []
     while any([len(path[x]) > 0 for x in path]):
       eligible = sorted([key for key in path if len(path[key]) == 0 and key not in taken])
+      if ("220" in taken and "240" in taken) or ("230" in taken and "250" in taken):
+        maxCourses = 3
       for course in eligible:
-        if len(layer) < i:
+        if len(layer) < maxCourses:
           layer.append(course)
           taken.append(course)
           for num in path:
@@ -105,11 +106,12 @@ class cGraph:
         else:
           coursePlan.append(layer)
           layer = []
-          i += 0.5
+    for num in path:
+      if num >= "400" and num not in layer:
+        layer.append(num)
+    
     if len(layer) > 0:
       coursePlan.append(layer)
-    pprint.pprint(path)
-    print(taken)
     return coursePlan
 
   def addFillers(self, interestPath: dict, taken: list):
@@ -139,14 +141,18 @@ class cGraph:
     while numElectives(path, "400E") < 3:
       next = getBest("400E")
       path[next] = self.graph["400E"][next]
+
+    for key in path.keys():
+      if "186" in path[key]:
+        path[key].remove("186")
     
-    return {key: val for key, val in path.items() if key not in taken}
+    return {key: val for key, val in path.items() if key not in taken and key != "186"}
 
   def generatePlan(self, interests: list, taken: list):
     return self.addFillers(self.addInterests(interests), taken)
 
-taken = ["121", "186", "187", "220", "240"]
+taken = ["121", "187"]
 
 courseGraph = cGraph(courses)
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
-pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken), taken))
+# pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken), taken))
