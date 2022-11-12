@@ -15,11 +15,11 @@ class cNode:
     self.rating = rating
     self.credits = credits
   
-  def __hash__(self):
-    return self.number
+  # def __hash__(self):
+  #   return self.number
   
-  def __eq__(self, num):
-    return self.number == num
+  # def __eq__(self, num):
+  #   return self.number == num
 
 class cEdge:
 
@@ -82,6 +82,9 @@ class cGraph:
         addPrereqs(course)
     return path
 
+  def splitCourses(self, path):
+    pass
+
   def addFillers(self, interestPath: dict, taken: list):
 
     def getBest(lvl):
@@ -109,9 +112,6 @@ class cGraph:
     while numElectives(path, "400E") < 3:
       next = getBest("400E")
       path[next] = self.graph["400E"][next]
-
-    for key in path:
-      path[key] = list(map(lambda v: self.getNode(v), path[key]))
     
     return {key: val for key, val in path.items() if key not in taken}
 
