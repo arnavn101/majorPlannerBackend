@@ -1,7 +1,7 @@
 from collections import namedtuple
 import pprint  
 from apis_extract import keep_only_nums
-from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors
+from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors, all_topics, tokenize
 
 courses = getCourseNums(cics_courses)
 # pprint.pprint(courses)
@@ -159,8 +159,17 @@ class cGraph:
   def generatePlan(self, interests: list, taken: list):
     return self.addFillers(self.addInterests(interests), taken)
 
+def flatten(l):
+  return [item for sublist in l for item in sublist]
+
+
 taken = ["121", "187"]
 
 courseGraph = cGraph(courses)
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
-pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken), taken))
+
+good_topics = ["Artificial Intelligence", "Data Science"]
+good_courses = flatten([all_topics[t] for t in good_topics])
+parsed_good = list(map(tokenize, good_courses))
+print(courseGraph.generatePlan(parsed_good, taken))
+pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(parsed_good, taken), taken))
