@@ -147,6 +147,8 @@ class cGraph:
     for key in path.keys():
       if "186" in path[key]:
         path[key].remove("186")
+      if "248" in path[key]:
+        path[key].remove("248")
     
     return {key: val for key, val in path.items() if key not in taken and key != "186"}
 
