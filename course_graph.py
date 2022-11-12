@@ -82,7 +82,7 @@ class cGraph:
         addPrereqs(course)
     return path
 
-  def splitCourses(self, path, taken):
+  def splitCourses(self, path: dict, taken: list):
     coursePlan = []
     keys = sorted(list(path.keys()))
     print(keys)
@@ -91,15 +91,12 @@ class cGraph:
           if course in path[num]:
             path[num].remove(course)
     
-    pprint.pprint(path)
-
+    i = 2
     layer = []
     while any([len(path[x]) > 0 for x in path]):
-      eligible = [key for key in path if len(path[key]) == 0]
-      print(eligible)
-      break
+      eligible = sorted([key for key in path if len(path[key]) == 0 and key not in taken])
       for course in eligible:
-        if len(layer) < 3:
+        if len(layer) < i:
           layer.append(course)
           taken.append(course)
           for num in path:
@@ -108,7 +105,11 @@ class cGraph:
         else:
           coursePlan.append(layer)
           layer = []
-          
+          i += 0.5
+    if len(layer) > 0:
+      coursePlan.append(layer)
+    pprint.pprint(path)
+    print(taken)
     return coursePlan
 
   def addFillers(self, interestPath: dict, taken: list):
@@ -139,7 +140,7 @@ class cGraph:
       next = getBest("400E")
       path[next] = self.graph["400E"][next]
     
-    return {key: val for key, val in path.items() if key not in taken and key != "248"}
+    return {key: val for key, val in path.items() if key not in taken}
 
   def generatePlan(self, interests: list, taken: list):
     return self.addFillers(self.addInterests(interests), taken)
