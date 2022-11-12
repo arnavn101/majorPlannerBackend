@@ -157,4 +157,4 @@ taken = ["121", "187"]
 
 courseGraph = cGraph(courses)
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
-pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan([], taken), taken))
+pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken), taken))
