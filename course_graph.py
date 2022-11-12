@@ -1,7 +1,7 @@
 from collections import namedtuple
 import pprint  
 from apis_extract import keep_only_nums
-from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getIntructors
+from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors
 
 courses = getCourseNums(cics_courses)
 # pprint.pprint(courses)
@@ -47,7 +47,7 @@ class cGraph:
   def getNode(self, course: str):
     name = getTitle(course)
     credits = getCredits(course)
-    profs = getIntructors(course)
+    profs = getInstructors(course)
     maxRating, bestProf = 0, ""
     for p in profs:
       if (best := float(getProfRating(p[0]))) >= maxRating:
@@ -82,8 +82,34 @@ class cGraph:
         addPrereqs(course)
     return path
 
-  def splitCourses(self, path):
-    pass
+  def splitCourses(self, path, taken):
+    coursePlan = []
+    keys = sorted(list(path.keys()))
+    print(keys)
+    for course in taken:
+      for num in keys:
+          if course in path[num]:
+            path[num].remove(course)
+    
+    pprint.pprint(path)
+
+    layer = []
+    while any([len(path[x]) > 0 for x in path]):
+      eligible = [key for key in path if len(path[key]) == 0]
+      print(eligible)
+      break
+      for course in eligible:
+        if len(layer) < 3:
+          layer.append(course)
+          taken.append(course)
+          for num in path:
+            if course in path[num]:
+              path[num].remove(course)
+        else:
+          coursePlan.append(layer)
+          layer = []
+          
+    return coursePlan
 
   def addFillers(self, interestPath: dict, taken: list):
 
@@ -113,12 +139,13 @@ class cGraph:
       next = getBest("400E")
       path[next] = self.graph["400E"][next]
     
-    return {key: val for key, val in path.items() if key not in taken}
+    return {key: val for key, val in path.items() if key not in taken and key != "248"}
 
   def generatePlan(self, interests: list, taken: list):
     return self.addFillers(self.addInterests(interests), taken)
 
-taken = ["121", "187", "220", "230"]
+taken = ["121", "186", "187", "220", "240"]
 
 courseGraph = cGraph(courses)
-pprint.pprint(courseGraph.generatePlan(["377", "383"], taken))
+# pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
+pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken), taken))

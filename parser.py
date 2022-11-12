@@ -24,7 +24,7 @@ def getAttribute(courseNumber, courses, attribute):
             return courses[courseNeeded][attribute]
     return "Invalid"
 
-def getIntructors(courseNumber):
+def getInstructors(courseNumber):
     temp = getAttribute(courseNumber, cics_courses, 'professors')
     result = []
     for each in temp:
