@@ -45,12 +45,14 @@ def getCourseNums(courses):
         "121": [],
         "186": ["121"],
         "187": ["121"],
-        "198C": []
+        "198C": [],
     }, "200C": {
         "220": ["187"],
         "230": ["187", "198C"],
         "240": ["187"],
-        "250": ["187"]
+        "250": ["187"],
+        "H250": ["187"],
+        "H220": ["187"]
     }, "300C": {
         "311": ["187", "250"],
         "305": ["220", "230", "240", "250"]
@@ -59,13 +61,13 @@ def getCourseNums(courses):
     i = 0
     for courseObj in courses:
         mainCourse = list(courses.keys())[i]
-        curr = tokenize(mainCourse)
-        if curr != "311" and curr != "305":
+        curr = keep_only_nums(tokenize(mainCourse))
+        if curr != "311" and curr != "305" and curr[0] != "1" and curr[0] != "2":
             lvl = findlvl(curr)
-        result[lvl][curr] = []
-        preReqArr = courses[mainCourse]['prereqs']
-        for elem in preReqArr:
-            result[lvl][curr].append(tokenize(elem))
+            result[lvl][curr] = []
+            preReqArr = courses[mainCourse]['prereqs']
+            for elem in preReqArr:
+                result[lvl][curr].append(tokenize(elem))
         i += 1
     return result
 
