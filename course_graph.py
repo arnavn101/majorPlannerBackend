@@ -78,6 +78,7 @@ class cGraph:
 
   def splitCourses(self, path: dict, taken: list):
     coursePlan = []
+
     keys = sorted(list(path.keys()))
     for course in taken:
       for num in keys:
@@ -163,12 +164,12 @@ def flatten(l):
   return [item for sublist in l for item in sublist]
 
 
-taken = ["121", "187"]
+taken = []
 
 courseGraph = cGraph(courses)
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
 
-good_topics = ["Artificial Intelligence", "Data Science"]
+good_topics = ["Security", "Software Engineering"]
 good_courses = flatten([all_topics[t] for t in good_topics])
 parsed_good = list(map(tokenize, good_courses))
 # print(courseGraph.generatePlan(parsed_good, taken))
