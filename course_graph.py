@@ -9,17 +9,11 @@ courses = getCourseNums(cics_courses)
 class cNode:
 
   def __init__(self, number, prof, name, rating=0, credits=4):
-    self.name = name #Todo
+    self.name = name
     self.number = number
     self.prof = prof
     self.rating = rating
     self.credits = credits
-  
-  # def __hash__(self):
-  #   return self.number
-  
-  # def __eq__(self, num):
-  #   return self.number == num
 
 class cEdge:
 
@@ -108,7 +102,11 @@ class cGraph:
           layer = []
     for num in path:
       if num >= "400" and num not in layer:
-        layer.append(num)
+        if len(layer) < 3:
+          layer.append(num)
+        else:
+          coursePlan.append(layer)
+          layer = []
     
     if len(layer) > 0:
       coursePlan.append(layer)
@@ -128,6 +126,10 @@ class cGraph:
     path = interestPath
     numElectives = lambda d, lvl: len([key for key in d if keep_only_nums(key) >= keep_only_nums(lvl) and keep_only_nums(key) not in ["311", "305"]])
     
+    for c in self.graph["100C"]:
+      if c != "186":
+        path[c] = self.graph["100C"][c]
+
     for c in self.graph["200C"]:
       path[c] = self.graph["200C"][c]
     
@@ -155,4 +157,4 @@ taken = ["121", "187"]
 
 courseGraph = cGraph(courses)
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
-# pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken), taken))
+pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan([], taken), taken))
