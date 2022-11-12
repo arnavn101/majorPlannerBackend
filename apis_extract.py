@@ -87,5 +87,5 @@ def topics_to_courses(courses, topics):
 
 
 # write_to_file(fetch_courses())
-all_info = read_from_file()
-all_topics = topics_to_courses(all_info, fetch_topics())
+# all_info = read_from_file()
+# all_topics = topics_to_courses(all_info, fetch_topics())
