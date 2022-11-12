@@ -171,5 +171,5 @@ courseGraph = cGraph(courses)
 good_topics = ["Artificial Intelligence", "Data Science"]
 good_courses = flatten([all_topics[t] for t in good_topics])
 parsed_good = list(map(tokenize, good_courses))
-print(courseGraph.generatePlan(parsed_good, taken))
+# print(courseGraph.generatePlan(parsed_good, taken))
 pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(parsed_good, taken), taken))
