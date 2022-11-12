@@ -103,7 +103,7 @@ class cGraph:
 
     total = []
     for num in path:
-      if num >= "400" and num not in total and all([num not in l for l in coursePlan]):
+      if num >= "300" and num not in total and all([num not in l for l in coursePlan]):
         if len(layer) < 3:
           layer.append(num)
           total.append(num)
