@@ -24,6 +24,13 @@ def getAttribute(courseNumber, courses, attribute):
             return courses[courseNeeded][attribute]
     return "Invalid"
 
+def getIntructors(courseNumber):
+    temp = getAttribute(courseNumber, cics_courses, 'professors')
+    result = []
+    for each in temp:
+        result.append(each.split(" "[0] + " " + each.split(" ")[-1]))
+    return result
+
 def getTitle(courseNumber):
     return getAttribute(courseNumber, cics_courses, 'title')
 
@@ -35,6 +42,15 @@ def get_prof_rmp():
     for proff in profs.keys():
         proffesors[proff.split(" ")[0] + " " + proff.split(" ")[-1]] = {"rating": profs[proff]["overall_rating"], "numRatings": profs[proff]["tNumRatings"]}
     return proffesors
+
+def getProfRating(instructor):
+    allProfs = get_prof_rmp()
+    for prof in allProfs.keys():
+        if prof == instructor:
+            return allProfs[prof]["rating"]
+    return "Invalid"
+
+# print(getProfRating("Ghazaleh Parvini"))
 
 # print(getTitle("220") + " credits:" + str(getCredits("220")))
 
@@ -85,4 +101,4 @@ def findlvl(courseNum):
         return "Not Valid"
     return lvl
 
-print(getCourseNums(cics_courses))
+# print(getCourseNums(cics_courses))
