@@ -60,8 +60,9 @@ def getCourseNums(courses):
     for courseObj in courses:
         mainCourse = list(courses.keys())[i]
         curr = tokenize(mainCourse)
-        if curr != "311" and curr != "305" and curr[0] != "1" and curr[1] != "2":
-            lvl = findlvl(curr)
+        if curr == "311" or curr == "305" or curr[0] == "1" or curr[1] == "2":
+            continue
+        lvl = findlvl(curr)
         result[lvl][curr] = []
         preReqArr = courses[mainCourse]['prereqs']
         for elem in preReqArr:
@@ -69,6 +70,8 @@ def getCourseNums(courses):
         i += 1
     return result
 
+
+print(getCourseNums(cics_courses))
 
 def findlvl(courseNum):
     lvlHere = keep_only_nums(courseNum)[0]
