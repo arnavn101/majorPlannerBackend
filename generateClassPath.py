@@ -1,9 +1,10 @@
 import pprint
 from apis_extract import keep_only_nums
-from parser import main, cics_courses, all_topics
+from parser import getCourseNums, cics_courses, all_topics
 
-pprint.pprint(all_topics)
-courses = main(cics_courses)
+# pprint.pprint(all_topics)
+courses = getCourseNums(cics_courses)
+pprint.pprint(courses)
 
 # Get next best course whose prereqs are satisfied
 def getCourse(courses, reqs, lvl):
@@ -19,7 +20,7 @@ def getCourse(courses, reqs, lvl):
       return c
 
 
-def findPath(courses: dict, taken: list, topics: dict, interests: set):
+def findPath(courses: dict): #, taken: list, topics: dict, interests: set):
   # Pre-populate schedule with taken/core courses
   majorReqs = {
     "100C": set(["121", "187"]),
@@ -30,9 +31,10 @@ def findPath(courses: dict, taken: list, topics: dict, interests: set):
   }
 
   path = []
-  impCourses = []
-  for i in interests:
-    impCourses.extend(all_topics[i])
+  interests = ["383", "420", "377"]
+  # impCourses = []
+  # for i in interests:
+  #   impCourses.extend(all_topics[i])
   
   def dfs(course):
     if course in path:
@@ -46,6 +48,10 @@ def findPath(courses: dict, taken: list, topics: dict, interests: set):
       lvl = "300C"
     elif int(keep_only_nums(course)) >= 300:
       lvl = "300E"
+    elif int(keep_only_nums(course)) >= 200:
+      lvl = "200C"
+    else:
+      lvl = "100C"
     
     majorReqs[lvl].add(course)
     for c in courses[lvl][course]:
@@ -67,7 +73,7 @@ def findPath(courses: dict, taken: list, topics: dict, interests: set):
 
   return majorReqs
 
-# pprint.pprint(findPath(courses))
+pprint.pprint(findPath(courses))
     
 
   
