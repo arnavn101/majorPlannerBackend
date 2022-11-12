@@ -71,7 +71,7 @@ def getCourseNums(courses):
     return result
 
 
-print(getCourseNums(cics_courses))
+
 
 def findlvl(courseNum):
     lvlHere = keep_only_nums(courseNum)[0]
