@@ -1,7 +1,6 @@
 from apis_extract import read_from_file, topics_to_courses, fetch_topics, keep_only_nums
 from rate_my_prof import RateMyProfScraper
 
-
 umass_uni = RateMyProfScraper(1513)
 umass_uni.read_dict()
 profs = umass_uni.dict_professors
@@ -13,7 +12,6 @@ all_topics = topics_to_courses(cics_courses, fetch_topics())
 def tokenize(str):
     courseNum = str.split(" ")[1]
     return keep_only_nums(courseNum)
-
 
 
 def getAttribute(courseNumber, courses, attribute):
@@ -82,10 +80,8 @@ def getCourseNums(courses):
     for _ in courses:
         mainCourse = list(courses.keys())[i]
         curr = tokenize(mainCourse)
-        if curr != "311" and curr != "305" and curr[0] != "1" and curr[
-            0] != "2" and "H" not in mainCourse and curr != "186" \
-                and not curr.startswith("49") and not curr.startswith("39") and curr != "490U" and curr != "460" and \
-                curr != "497" and all(["497" not in c for c in courses[mainCourse]["prereqs"]]):
+        if curr not in {"311", "305", "186", "460"} and curr[0] != "1" and curr[0] != "2" and \
+                "H" not in mainCourse and not curr.startswith("49") and not curr.startswith("39"):
             lvl = findlvl(curr)
             result[lvl][curr] = []
             preReqArr = courses[mainCourse]['prereqs']
