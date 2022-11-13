@@ -52,6 +52,7 @@ def parse_major_graph(initial_courses):
             cur_courses.append({"number": course, "title": parsed_cics_courses[course]["title"],
                                 "credits": float(parsed_cics_courses[course]["credits"]),
                                 "rating": mean(list_ratings) if list_ratings else round(random.uniform(2, 5), 2)})
+            cur_courses[-1]["credits"] = max(cur_courses[-1]["credits"], 3)
         all_sems[f"Semester {sem_num + 1}"] = cur_courses
     return all_sems
 
