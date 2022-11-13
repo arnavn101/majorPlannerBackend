@@ -1,6 +1,7 @@
-from typing import List, Union
+from typing import List
 from fastapi import FastAPI
-
+from pydantic import BaseModel
+from course_graph import return_good
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -17,8 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from pydantic import BaseModel
-
 
 class UserProfile(BaseModel):
     email: str
@@ -33,7 +32,7 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/log")
-async def log(profile: UserProfile):
-    print(profile)
-    return {"message": "Hello World"}
+@app.post("/graph")
+async def get_major_graph(profile: UserProfile):
+    list_courses = return_good(profile.interests, profile.courses)
+    return list_courses

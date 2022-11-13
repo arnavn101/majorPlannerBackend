@@ -12,9 +12,11 @@ profs = umass_uni.dict_professors
 cics_courses = read_from_file("spireInfo.pickle")
 all_topics = topics_to_courses(cics_courses, fetch_topics())
 
+
 def tokenize(str):
     courseNum = str.split(" ")[1]
     return keep_only_nums(courseNum)
+
 
 def getAttribute(courseNumber, courses, attribute):
     result = {}
@@ -24,6 +26,7 @@ def getAttribute(courseNumber, courses, attribute):
             return courses[courseNeeded][attribute]
     return "Invalid"
 
+
 def getInstructors(courseNumber):
     temp = getAttribute(courseNumber, cics_courses, 'professors')
     result = []
@@ -31,17 +34,22 @@ def getInstructors(courseNumber):
         result.append(each.split(" "[0] + " " + each.split(" ")[-1]))
     return result
 
+
 def getTitle(courseNumber):
     return getAttribute(courseNumber, cics_courses, 'title')
+
 
 def getCredits(courseNumber):
     return getAttribute(courseNumber, cics_courses, 'credits')
 
+
 def get_prof_rmp():
     proffesors = {}
     for proff in profs.keys():
-        proffesors[proff.split(" ")[0] + " " + proff.split(" ")[-1]] = {"rating": profs[proff]["overall_rating"], "numRatings": profs[proff]["tNumRatings"]}
+        proffesors[proff.split(" ")[0] + " " + proff.split(" ")[-1]] = {"rating": profs[proff]["overall_rating"],
+                                                                        "numRatings": profs[proff]["tNumRatings"]}
     return proffesors
+
 
 def getProfRating(instructor):
     allProfs = get_prof_rmp()
@@ -50,10 +58,10 @@ def getProfRating(instructor):
             return allProfs[prof]["rating"]
     return 0
 
+
 # print(getProfRating("Ghazaleh Parvini"))
 
 # print(getTitle("220") + " credits:" + str(getCredits("220")))
-
 
 
 def getCourseNums(courses):
@@ -76,7 +84,8 @@ def getCourseNums(courses):
     for _ in courses:
         mainCourse = list(courses.keys())[i]
         curr = tokenize(mainCourse)
-        if curr != "311" and curr != "305" and curr[0] != "1" and curr[0] != "2" and "H" not in mainCourse and curr != "186"\
+        if curr != "311" and curr != "305" and curr[0] != "1" and curr[
+            0] != "2" and "H" not in mainCourse and curr != "186" \
                 and not curr.startswith("49") and not curr.startswith("39") and curr != "490U" and curr != "460":
             lvl = findlvl(curr)
             result[lvl][curr] = []
