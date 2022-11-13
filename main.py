@@ -68,7 +68,6 @@ async def root():
 
 @app.post("/graph")
 async def get_major_graph(profile: UserProfile):
-    list_courses = return_good(clean_input(profile.interests), clean_input(profile.courses))
+    list_courses, _ = return_good(clean_input(profile.interests), clean_input(profile.courses))
     resp = parse_major_graph(list_courses)
-    print(resp)
     return resp

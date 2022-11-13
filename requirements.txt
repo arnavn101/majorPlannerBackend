@@ -3,3 +3,5 @@ requests
 tqdm
 bs4
 uvicorn
+pyvis
+matplotlib

@@ -1,12 +1,11 @@
-from collections import namedtuple, defaultdict
+from collections import namedtuple
 from apis_extract import keep_only_nums
 from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors, all_topics, \
     tokenize, filter_good
+from copy import deepcopy
 
-# pprint.pprint(courses)
 
 class cNode:
-
     def __init__(self, number, prof, name, rating=0, credits=4):
         self.name = name
         self.number = number
@@ -16,14 +15,12 @@ class cNode:
 
 
 class cEdge:
-
     def __init__(self, course, preReq, AND=False):
         newEdge = namedtuple('newEdge', ['course', 'preReq', 'AND'])
         self.edge = newEdge(course, preReq, AND)
 
 
 class cGraph:
-
     def __init__(self, gDict: dict = None):
         self.graph = dict() if gDict is None else gDict
         self.edges = set()
@@ -153,10 +150,12 @@ def return_good(good_topics, taken):
     courses = getCourseNums(cics_courses)
     courseGraph = cGraph(courses)
     good_courses = flatten([all_topics[t] for t in good_topics])
-    parsed_good = list(set(list(filter(lambda d: d[1] != "9" and d[0] != "1" and filter_good(d), (list(map(tokenize, good_courses)))))))[
+    parsed_good = list(set(list(
+        filter(lambda d: d[1] != "9" and d[0] != "1" and filter_good(d), (list(map(tokenize, good_courses)))))))[
                   :3]
     taken = list(map(tokenize, taken))
     list_courses_req = courseGraph.generatePlan(parsed_good, taken)
+    adj_list_courses = deepcopy(list_courses_req)
     courseGraph.remove_from_both(list_courses_req, taken)
     list_course_plan = courseGraph.splitCourses(list_courses_req)
-    return list_course_plan
+    return list_course_plan, adj_list_courses
