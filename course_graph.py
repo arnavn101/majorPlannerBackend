@@ -151,8 +151,7 @@ def return_good(good_topics, taken):
     courseGraph = cGraph(courses)
     good_courses = flatten([all_topics[t] for t in good_topics])
     parsed_good = list(set(list(
-        filter(lambda d: d[1] != "9" and d[0] != "1" and filter_good(d), (list(map(tokenize, good_courses)))))))[
-                  :3]
+        filter(filter_good, (list(map(tokenize, good_courses)))))))[:3]
     taken = list(map(tokenize, taken))
     list_courses_req = courseGraph.generatePlan(parsed_good, taken)
     adj_list_courses = deepcopy(list_courses_req)

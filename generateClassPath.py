@@ -21,9 +21,9 @@ def getCourse(courses, reqs, lvl):
 def findPath(courses: dict):  # , taken: list, topics: dict, interests: set):
     # Pre-populate schedule with taken/core courses
     majorReqs = {
-        "100C": set(["121", "187"]),
-        "200C": set(["220", "230", "240", "250"]),
-        "300C": set(["305", "311", "320"]),
+        "100C": {"121", "187"},
+        "200C": {"220", "230", "240", "250"},
+        "300C": {"305", "311", "320"},
         "300E": set(),
         "400E": set(),
     }
