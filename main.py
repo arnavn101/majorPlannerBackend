@@ -40,8 +40,8 @@ def parse_major_graph(initial_courses):
                             if p in profs]
             print(list_ratings)
             cur_courses.append({"number": course, "title": parsed_cics_courses[course]["title"],
-                                "credits": parsed_cics_courses[course]["credits"],
-                                "difficulty": mean(list_ratings) if list_ratings else -1})
+                                "credits": float(parsed_cics_courses[course]["credits"]),
+                                "rating": mean(list_ratings) if list_ratings else -1})
         all_sems[f"Semester {sem_num + 1}"] = cur_courses
     return all_sems
 
