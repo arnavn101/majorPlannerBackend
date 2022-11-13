@@ -37,8 +37,7 @@ def parse_major_graph(initial_courses):
         for course in list_courses:
             list_ratings = [float(profs[p]["overall_rating"])
                             for p in parsed_cics_courses[course]["professors"]
-                            if p in profs]
-            print(list_ratings)
+                            if p in profs and profs[p]["overall_rating"].isdigit()]
             cur_courses.append({"number": course, "title": parsed_cics_courses[course]["title"],
                                 "credits": float(parsed_cics_courses[course]["credits"]),
                                 "rating": mean(list_ratings) if list_ratings else -1})
