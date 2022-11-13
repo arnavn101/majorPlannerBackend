@@ -1,10 +1,8 @@
-import pprint
 from apis_extract import keep_only_nums
-from parser import getCourseNums, cics_courses, all_topics
 
 # pprint.pprint(all_topics)
-courses = getCourseNums(cics_courses)
-pprint.pprint(courses)
+# courses = getCourseNums(cics_courses)
+# pprint.pprint(courses)
 
 
 # Get next best course whose prereqs are satisfied
@@ -75,4 +73,4 @@ def findPath(courses: dict):  # , taken: list, topics: dict, interests: set):
     return majorReqs
 
 
-pprint.pprint(findPath(courses))
+# pprint.pprint(findPath(courses))

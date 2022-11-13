@@ -1,5 +1,4 @@
 from collections import namedtuple
-import pprint
 from apis_extract import keep_only_nums
 from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors, all_topics, \
     tokenize
@@ -80,6 +79,7 @@ class cGraph:
 
     def splitCourses(self, path: dict, taken: list):
         coursePlan = []
+        taken = taken.copy()
         keys = sorted(list(path.keys()))
         for course in taken:
             for num in keys:
@@ -158,7 +158,8 @@ class cGraph:
             if "248" in path[key]:
                 path[key].remove("248")
 
-        return {key: val for key, val in path.items() if key not in taken and key != "186" and key != "248"}
+        ret_dict = {key: val for key, val in path.items() if key not in taken and key != "186" and key != "248"}
+        return ret_dict
 
     def generatePlan(self, interests: list, taken: list):
         return self.addFillers(self.addInterests(interests), taken)
@@ -176,10 +177,13 @@ def flatten(l):
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
 
 
-def return_good(good_topics=["Data Science"], taken=["COMPSCI 121 Intro to", "COMPSCI 187 Intro to"]):
+def return_good(good_topics, taken):
     courses = getCourseNums(cics_courses)
     courseGraph = cGraph(courses)
     good_courses = flatten([all_topics[t] for t in good_topics])
     parsed_good = list(set(list(filter(lambda d: d[1] != "9" and d[0] != "1", (list(map(tokenize, good_courses)))))))[
                   :3]
-    return courseGraph.splitCourses(courseGraph.generatePlan(parsed_good, taken), taken)
+    taken = list(map(tokenize, taken))
+    list_courses_req = courseGraph.generatePlan(parsed_good, taken)
+    list_course_plan = courseGraph.splitCourses(list_courses_req, taken)
+    return list_course_plan

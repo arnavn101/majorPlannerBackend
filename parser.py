@@ -1,9 +1,6 @@
 from apis_extract import read_from_file, topics_to_courses, fetch_topics, keep_only_nums
 from rate_my_prof import RateMyProfScraper
 
-# tryCourses = {'COMPSCI 250': {'prereqs': ['COMPSCI 187', 'MATH 132'], 'professors': ['Ghazaleh Parvini'], 'description': "Basic concepts of discrete mathematics useful to computer science:  set theory, strings and formal languages, propositional and predicate calculus, relations and functions, basic number theory.  Induction and recursion:  interplay of inductive definition, inductive proof, and recursive algorithms.  Graphs, trees, and search.   Finite-state machines, regular languages, nondeterministic finite automata, Kleene's Theorem.", 'credits': 4.0},
-#               'COMPSCI 220': {'prereqs': ['COMPSCI 187'], 'professors': ['Jaime Davila', 'Marius Minea'], 'description': 'Development of individual skills necessary for designing, implementing, testing and modifying larger programs, including: design strategies and patterns, using functional and object-oriented approaches, testing and program verification, code refactoring, interfacing with libraries.', 'credits': 4.0, 'title': 'Programming Methodology'}
-#               }
 
 umass_uni = RateMyProfScraper(1513)
 umass_uni.read_dict()
@@ -19,7 +16,6 @@ def tokenize(str):
 
 
 def getAttribute(courseNumber, courses, attribute):
-    result = {}
     for courseNeeded in courses.keys():
         curr = tokenize(courseNeeded)
         if curr == courseNumber:
@@ -31,7 +27,7 @@ def getInstructors(courseNumber):
     temp = getAttribute(courseNumber, cics_courses, 'professors')
     result = []
     for each in temp:
-        result.append(each.split(" "[0] + " " + each.split(" ")[-1]))
+        result.append(each.split(" ")[0] + " " + each.split(" ")[-1])
     return result
 
 
@@ -86,7 +82,8 @@ def getCourseNums(courses):
         curr = tokenize(mainCourse)
         if curr != "311" and curr != "305" and curr[0] != "1" and curr[
             0] != "2" and "H" not in mainCourse and curr != "186" \
-                and not curr.startswith("49") and not curr.startswith("39") and curr != "490U" and curr != "460":
+                and not curr.startswith("49") and not curr.startswith("39") and curr != "490U" and curr != "460" and \
+                curr != "497" and all(["497" not in c for c in courses[mainCourse]["prereqs"]]):
             lvl = findlvl(curr)
             result[lvl][curr] = []
             preReqArr = courses[mainCourse]['prereqs']
