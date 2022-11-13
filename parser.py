@@ -58,6 +58,10 @@ def getProfRating(instructor):
 
 # print(getTitle("220") + " credits:" + str(getCredits("220")))
 
+def filter_good(curr):
+    return curr not in {"311", "305", "186", "460"} and curr[0] != "1" and curr[0] != "2" and \
+           not curr.startswith("49") and not curr.startswith("39")
+
 
 def getCourseNums(courses):
     result = {"100C": {
@@ -80,8 +84,7 @@ def getCourseNums(courses):
     for _ in courses:
         mainCourse = list(courses.keys())[i]
         curr = tokenize(mainCourse)
-        if curr not in {"311", "305", "186", "460"} and curr[0] != "1" and curr[0] != "2" and \
-                "H" not in mainCourse and not curr.startswith("49") and not curr.startswith("39"):
+        if filter_good(curr) and "H" not in mainCourse:
             lvl = findlvl(curr)
             result[lvl][curr] = []
             preReqArr = courses[mainCourse]['prereqs']

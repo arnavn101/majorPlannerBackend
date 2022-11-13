@@ -30,6 +30,10 @@ class UserProfile(BaseModel):
     courses: List[str]
 
 
+def clean_input(ll):
+    return list(filter(None, ll))
+
+
 def is_float(element: any) -> bool:
     if element is None:
         return False
@@ -64,7 +68,7 @@ async def root():
 
 @app.post("/graph")
 async def get_major_graph(profile: UserProfile):
-    list_courses = return_good(profile.interests, profile.courses)
+    list_courses = return_good(clean_input(profile.interests), clean_input(profile.courses))
     resp = parse_major_graph(list_courses)
     print(resp)
     return resp

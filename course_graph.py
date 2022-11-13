@@ -1,7 +1,7 @@
 from collections import namedtuple, defaultdict
 from apis_extract import keep_only_nums
 from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors, all_topics, \
-    tokenize
+    tokenize, filter_good
 
 # pprint.pprint(courses)
 
@@ -153,7 +153,7 @@ def return_good(good_topics, taken):
     courses = getCourseNums(cics_courses)
     courseGraph = cGraph(courses)
     good_courses = flatten([all_topics[t] for t in good_topics])
-    parsed_good = list(set(list(filter(lambda d: d[1] != "9" and d[0] != "1", (list(map(tokenize, good_courses)))))))[
+    parsed_good = list(set(list(filter(lambda d: d[1] != "9" and d[0] != "1" and filter_good(d), (list(map(tokenize, good_courses)))))))[
                   :3]
     taken = list(map(tokenize, taken))
     list_courses_req = courseGraph.generatePlan(parsed_good, taken)
