@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from apis_extract import keep_only_nums
 from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors, all_topics, \
     tokenize
@@ -77,46 +77,20 @@ class cGraph:
                 addPrereqs(course)
         return path
 
-    def splitCourses(self, path: dict, taken: list):
-        coursePlan = []
-        taken = taken.copy()
-        keys = sorted(list(path.keys()))
-        for course in taken:
-            for num in keys:
-                if course in path[num]:
-                    path[num].remove(course)
+    def splitCourses(self, path, taken):
+        if not path:
+            return []
 
-        maxCourses = 2
-        layer = []
-        while any([len(path[x]) > 0 for x in path]):
-            eligible = sorted([key for key in path if len(path[key]) == 0 and key not in taken])
-            if ("220" in taken and "240" in taken) or ("230" in taken and "250" in taken):
-                maxCourses = 3
-            for course in eligible:
-                if len(layer) < maxCourses:
-                    layer.append(course)
-                    taken.append(course)
-                    for num in path:
-                        if course in path[num]:
-                            path[num].remove(course)
-                else:
-                    coursePlan.append(layer)
-                    layer = []
+        viable_courses = list(filter(lambda d: len(path[d]) == 0, path))[:3]
+        for c in viable_courses:
+            del path[c]
 
-        total = []
-        for num in path:
-            if num >= "300" and num not in total and all([num not in l for l in coursePlan]):
-                if len(layer) < 3 and num not in layer:
-                    layer.append(num)
-                    total.append(num)
-                else:
-                    coursePlan.append(layer)
-                    layer = []
+        for other_courses in path:
+            for to_rem in viable_courses:
+                if to_rem in path[other_courses]:
+                    path[other_courses].pop(path[other_courses].index(to_rem))
 
-        if len(layer) > 0:
-            coursePlan.append(layer)
-
-        return coursePlan
+        return [viable_courses] + self.splitCourses(path, taken)
 
     def addFillers(self, interestPath: dict, taken: list):
 
@@ -167,14 +141,6 @@ class cGraph:
 
 def flatten(l):
     return [item for sublist in l for item in sublist]
-
-
-# for d in courses:
-#     for p in courses[d]:
-#         courses[d][p] = list(set(courses[d][p]))
-
-
-# pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
 
 
 def return_good(good_topics, taken):
