@@ -79,13 +79,17 @@ class cGraph:
 
     def remove_from_both(self, path, viable_courses):
         for c in viable_courses:
-            if c in path:
-                del path[c]
+            for k in path:
+                if c in k:
+                    del path[k]
+                    break
 
         for other_courses in path:
             for to_rem in viable_courses:
-                if to_rem in path[other_courses]:
-                    path[other_courses].pop(path[other_courses].index(to_rem))
+                for k in path[other_courses]:
+                    if to_rem in k:
+                        path[other_courses].pop(path[other_courses].index(k))
+                        break
 
     def splitCourses(self, path):
         if not path:
