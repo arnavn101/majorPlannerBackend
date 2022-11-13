@@ -4,9 +4,6 @@ from apis_extract import keep_only_nums
 from parser import cics_courses, getCourseNums, getTitle, getCredits, getProfRating, getInstructors, all_topics, \
     tokenize
 
-courses = getCourseNums(cics_courses)
-
-
 # pprint.pprint(courses)
 
 class cNode:
@@ -171,20 +168,18 @@ def flatten(l):
     return [item for sublist in l for item in sublist]
 
 
-for d in courses:
-    for p in courses[d]:
-        courses[d][p] = list(set(courses[d][p]))
-
-courseGraph = cGraph(courses)
+# for d in courses:
+#     for p in courses[d]:
+#         courses[d][p] = list(set(courses[d][p]))
 
 
 # pprint.pprint(courseGraph.generatePlan(["377", "383", "453", "420", "446"], taken))
 
 
 def return_good(good_topics=["Data Science"], taken=["COMPSCI 121 Intro to", "COMPSCI 187 Intro to"]):
-    courses["400E"]["461"].pop()
+    courses = getCourseNums(cics_courses)
+    courseGraph = cGraph(courses)
     good_courses = flatten([all_topics[t] for t in good_topics])
     parsed_good = list(set(list(filter(lambda d: d[1] != "9" and d[0] != "1", (list(map(tokenize, good_courses)))))))[
                   :3]
-    print(courseGraph.generatePlan(parsed_good, taken))
-    pprint.pprint(courseGraph.splitCourses(courseGraph.generatePlan(parsed_good, taken), taken))
+    return courseGraph.splitCourses(courseGraph.generatePlan(parsed_good, taken), taken)

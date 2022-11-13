@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from course_graph import return_good
 from fastapi.middleware.cors import CORSMiddleware
+from parser import cics_courses, tokenize, profs
+from statistics import mean
 
 app = FastAPI()
 
@@ -27,6 +29,23 @@ class UserProfile(BaseModel):
     courses: List[str]
 
 
+def parse_major_graph(initial_courses):
+    all_sems = dict()
+    parsed_cics_courses = {(k.split()[1]): v for k, v in cics_courses.items()}
+    for sem_num, list_courses in enumerate(initial_courses):
+        cur_courses = []
+        for course in list_courses:
+            list_ratings = [float(profs[p]["overall_rating"])
+                            for p in parsed_cics_courses[course]["professors"]
+                            if p in profs]
+            print(list_ratings)
+            cur_courses.append({"number": course, "title": parsed_cics_courses[course]["title"],
+                                "credits": parsed_cics_courses[course]["credits"],
+                                "difficulty": mean(list_ratings) if list_ratings else -1})
+        all_sems[f"Semester {sem_num + 1}"] = cur_courses
+    return all_sems
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -35,4 +54,4 @@ async def root():
 @app.post("/graph")
 async def get_major_graph(profile: UserProfile):
     list_courses = return_good(profile.interests, profile.courses)
-    return list_courses
+    return parse_major_graph(list_courses)
