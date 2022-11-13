@@ -77,20 +77,22 @@ class cGraph:
                 addPrereqs(course)
         return path
 
-    def splitCourses(self, path, taken):
-        if not path:
-            return []
-
-        viable_courses = list(filter(lambda d: len(path[d]) == 0, path))[:3]
+    def remove_from_both(self, path, viable_courses):
         for c in viable_courses:
-            del path[c]
+            if c in path:
+                del path[c]
 
         for other_courses in path:
             for to_rem in viable_courses:
                 if to_rem in path[other_courses]:
                     path[other_courses].pop(path[other_courses].index(to_rem))
 
-        return [viable_courses] + self.splitCourses(path, taken)
+    def splitCourses(self, path):
+        if not path:
+            return []
+        viable_courses = list(filter(lambda d: len(path[d]) == 0, path))[:3]
+        self.remove_from_both(path, viable_courses)
+        return [viable_courses] + self.splitCourses(path)
 
     def addFillers(self, interestPath: dict, taken: list):
 
@@ -151,5 +153,6 @@ def return_good(good_topics, taken):
                   :3]
     taken = list(map(tokenize, taken))
     list_courses_req = courseGraph.generatePlan(parsed_good, taken)
-    list_course_plan = courseGraph.splitCourses(list_courses_req, taken)
+    courseGraph.remove_from_both(list_courses_req, taken)
+    list_course_plan = courseGraph.splitCourses(list_courses_req)
     return list_course_plan
